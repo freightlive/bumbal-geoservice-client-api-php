@@ -54,7 +54,7 @@ class ApiErrorResponseModel implements ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'errors' => 'string[][]',
+        'errors' => 'object',
         'code' => 'int'
     ];
 
@@ -168,7 +168,7 @@ class ApiErrorResponseModel implements ArrayAccess
 
     /**
      * Gets errors
-     * @return string[][]
+     * @return object
      */
     public function getErrors()
     {
@@ -177,7 +177,7 @@ class ApiErrorResponseModel implements ArrayAccess
 
     /**
      * Sets errors
-     * @param string[][] $errors Errors
+     * @param object $errors Errors
      * @return $this
      */
     public function setErrors($errors)

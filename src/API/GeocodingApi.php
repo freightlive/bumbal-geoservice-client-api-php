@@ -97,12 +97,13 @@ class GeocodingApi
      * @param string $zipcode Zipcode (optional)
      * @param string $street Street (optional)
      * @param string $house_nr House Number (optional)
+     * @param string $preferred_provider Prioritize provider (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return \GeoService\Model\GeoDataModel
      */
-    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null)
+    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null)
     {
-        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr);
+        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider);
         return $response;
     }
 
@@ -116,10 +117,11 @@ class GeocodingApi
      * @param string $zipcode Zipcode (optional)
      * @param string $street Street (optional)
      * @param string $house_nr House Number (optional)
+     * @param string $preferred_provider Prioritize provider (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return array of \GeoService\Model\GeoDataModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null)
+    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null)
     {
         // verify the required parameter 'city' is set
         if ($city === null) {
@@ -160,6 +162,10 @@ class GeocodingApi
         // query params
         if ($iso_country !== null) {
             $queryParams['iso_country'] = $this->apiClient->getSerializer()->toQueryValue($iso_country);
+        }
+        // query params
+        if ($preferred_provider !== null) {
+            $queryParams['preferred_provider'] = $this->apiClient->getSerializer()->toQueryValue($preferred_provider);
         }
 
         // for model (json/xml)

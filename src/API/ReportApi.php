@@ -150,7 +150,7 @@ class ReportApi
         }
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('apikey');
-        if (strlen($apiKey) !== 0) {
+        if (strlen($apiKey ?? '') !== 0) {
             $headerParams['apikey'] = $apiKey;
         }
         // make the API Call
@@ -163,6 +163,105 @@ class ReportApi
                 $headerParams,
                 '\GeoService\Model\ReportResponseModel',
                 '/admin/report'
+            );
+
+            return [$this->apiClient->getSerializer()->deserialize($response, '\GeoService\Model\ReportResponseModel', $httpHeader), $statusCode, $httpHeader];
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\GeoService\Model\ReportResponseModel', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 400:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\GeoService\Model\ApiErrorResponseModel', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+                case 401:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\GeoService\Model\ApiErrorResponseModel', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation report_0
+     *
+     * report service usage for an ApiUser
+     *
+     * @param string $apiuser_name name of ApiUser (optional)
+     * @param string $datetime_from Datetime from (optional)
+     * @param string $datetime_to Datetime to (optional)
+     * @throws \GeoService\ApiException on non-2xx response
+     * @return \GeoService\Model\ReportResponseModel
+     */
+    public function report_0($apiuser_name = null, $datetime_from = null, $datetime_to = null)
+    {
+        list($response) = $this->report_0WithHttpInfo($apiuser_name, $datetime_from, $datetime_to);
+        return $response;
+    }
+
+    /**
+     * Operation report_0WithHttpInfo
+     *
+     * report service usage for an ApiUser
+     *
+     * @param string $apiuser_name name of ApiUser (optional)
+     * @param string $datetime_from Datetime from (optional)
+     * @param string $datetime_to Datetime to (optional)
+     * @throws \GeoService\ApiException on non-2xx response
+     * @return array of \GeoService\Model\ReportResponseModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function report_0WithHttpInfo($apiuser_name = null, $datetime_from = null, $datetime_to = null)
+    {
+        // parse inputs
+        $resourcePath = "/admin/report/unique-address";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        if ($apiuser_name !== null) {
+            $queryParams['apiuser_name'] = $this->apiClient->getSerializer()->toQueryValue($apiuser_name);
+        }
+        // query params
+        if ($datetime_from !== null) {
+            $queryParams['datetime_from'] = $this->apiClient->getSerializer()->toQueryValue($datetime_from);
+        }
+        // query params
+        if ($datetime_to !== null) {
+            $queryParams['datetime_to'] = $this->apiClient->getSerializer()->toQueryValue($datetime_to);
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        // this endpoint requires API key authentication
+        $apiKey = $this->apiClient->getApiKeyWithPrefix('apikey');
+        if (strlen($apiKey ?? '') !== 0) {
+            $headerParams['apikey'] = $apiKey;
+        }
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\GeoService\Model\ReportResponseModel',
+                '/admin/report/unique-address'
             );
 
             return [$this->apiClient->getSerializer()->deserialize($response, '\GeoService\Model\ReportResponseModel', $httpHeader), $statusCode, $httpHeader];

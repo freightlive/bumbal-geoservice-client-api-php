@@ -143,7 +143,7 @@ class GeodataApi
         }
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('apikey');
-        if (strlen($apiKey) !== 0) {
+        if (strlen($apiKey ?? '') !== 0) {
             $headerParams['apikey'] = $apiKey;
         }
         // make the API Call

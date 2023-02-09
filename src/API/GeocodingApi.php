@@ -98,12 +98,13 @@ class GeocodingApi
      * @param string $street Street (optional)
      * @param string $house_nr House Number (optional)
      * @param string $preferred_provider Prioritize provider (optional)
+     * @param string[] $exclude_providers Exclude providers (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return \GeoService\Model\GeoDataModel
      */
-    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null)
+    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null)
     {
-        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider);
+        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers);
         return $response;
     }
 
@@ -118,10 +119,11 @@ class GeocodingApi
      * @param string $street Street (optional)
      * @param string $house_nr House Number (optional)
      * @param string $preferred_provider Prioritize provider (optional)
+     * @param string[] $exclude_providers Exclude providers (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return array of \GeoService\Model\GeoDataModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null)
+    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null)
     {
         // verify the required parameter 'city' is set
         if ($city === null) {
@@ -167,6 +169,13 @@ class GeocodingApi
         if ($preferred_provider !== null) {
             $queryParams['preferred_provider'] = $this->apiClient->getSerializer()->toQueryValue($preferred_provider);
         }
+        // query params
+        if (is_array($exclude_providers)) {
+            $exclude_providers = $this->apiClient->getSerializer()->serializeCollection($exclude_providers, 'csv', true);
+        }
+        if ($exclude_providers !== null) {
+            $queryParams['exclude_providers'] = $this->apiClient->getSerializer()->toQueryValue($exclude_providers);
+        }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
@@ -176,7 +185,7 @@ class GeocodingApi
         }
         // this endpoint requires API key authentication
         $apiKey = $this->apiClient->getApiKeyWithPrefix('apikey');
-        if (strlen($apiKey) !== 0) {
+        if (strlen($apiKey ?? '') !== 0) {
             $headerParams['apikey'] = $apiKey;
         }
         // make the API Call

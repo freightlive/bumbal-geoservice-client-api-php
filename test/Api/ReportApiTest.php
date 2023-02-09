@@ -81,4 +81,14 @@ class ReportApiTest extends \PHPUnit_Framework_TestCase
     public function testReport()
     {
     }
+
+    /**
+     * Test case for report_0
+     *
+     * report service usage for an ApiUser.
+     *
+     */
+    public function testReport0()
+    {
+    }
 }

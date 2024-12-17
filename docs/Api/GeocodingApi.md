@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **geoCoding**
-> \GeoService\Model\GeoDataModel geoCoding($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers)
+> \GeoService\Model\GeoDataModel geoCoding($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers, $accuracy_threshold)
 
 GeoCoding
 
@@ -32,9 +32,10 @@ $street = "street_example"; // string | Street
 $house_nr = "house_nr_example"; // string | House Number
 $preferred_provider = "preferred_provider_example"; // string | Prioritize provider
 $exclude_providers = array("exclude_providers_example"); // string[] | Exclude providers
+$accuracy_threshold = 3.4; // float | Value between 0 and 1 that describes which threshold value for accuracy scores we consider to be results
 
 try {
-    $result = $api_instance->geoCoding($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers);
+    $result = $api_instance->geoCoding($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers, $accuracy_threshold);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GeocodingApi->geoCoding: ', $e->getMessage(), PHP_EOL;
@@ -53,6 +54,7 @@ Name | Type | Description  | Notes
  **house_nr** | **string**| House Number | [optional]
  **preferred_provider** | **string**| Prioritize provider | [optional]
  **exclude_providers** | [**string[]**](../Model/string.md)| Exclude providers | [optional]
+ **accuracy_threshold** | **float**| Value between 0 and 1 that describes which threshold value for accuracy scores we consider to be results | [optional]
 
 ### Return type
 

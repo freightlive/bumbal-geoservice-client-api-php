@@ -99,12 +99,13 @@ class GeocodingApi
      * @param string $house_nr House Number (optional)
      * @param string $preferred_provider Prioritize provider (optional)
      * @param string[] $exclude_providers Exclude providers (optional)
+     * @param float $accuracy_threshold Value between 0 and 1 that describes which threshold value for accuracy scores we consider to be results (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return \GeoService\Model\GeoDataModel
      */
-    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null)
+    public function geoCoding($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null, $accuracy_threshold = null)
     {
-        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers);
+        list($response) = $this->geoCodingWithHttpInfo($city, $iso_country, $zipcode, $street, $house_nr, $preferred_provider, $exclude_providers, $accuracy_threshold);
         return $response;
     }
 
@@ -120,10 +121,11 @@ class GeocodingApi
      * @param string $house_nr House Number (optional)
      * @param string $preferred_provider Prioritize provider (optional)
      * @param string[] $exclude_providers Exclude providers (optional)
+     * @param float $accuracy_threshold Value between 0 and 1 that describes which threshold value for accuracy scores we consider to be results (optional)
      * @throws \GeoService\ApiException on non-2xx response
      * @return array of \GeoService\Model\GeoDataModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null)
+    public function geoCodingWithHttpInfo($city, $iso_country, $zipcode = null, $street = null, $house_nr = null, $preferred_provider = null, $exclude_providers = null, $accuracy_threshold = null)
     {
         // verify the required parameter 'city' is set
         if ($city === null) {
@@ -133,6 +135,13 @@ class GeocodingApi
         if ($iso_country === null) {
             throw new \InvalidArgumentException('Missing the required parameter $iso_country when calling geoCoding');
         }
+        if (!is_null($accuracy_threshold) && ($accuracy_threshold > 1)) {
+            throw new \InvalidArgumentException('invalid value for "$accuracy_threshold" when calling GeocodingApi.geoCoding, must be smaller than or equal to 1.');
+        }
+        if (!is_null($accuracy_threshold) && ($accuracy_threshold < 0)) {
+            throw new \InvalidArgumentException('invalid value for "$accuracy_threshold" when calling GeocodingApi.geoCoding, must be bigger than or equal to 0.');
+        }
+
         // parse inputs
         $resourcePath = "/geocode";
         $httpBody = '';
@@ -175,6 +184,10 @@ class GeocodingApi
         }
         if ($exclude_providers !== null) {
             $queryParams['exclude_providers'] = $this->apiClient->getSerializer()->toQueryValue($exclude_providers);
+        }
+        // query params
+        if ($accuracy_threshold !== null) {
+            $queryParams['accuracy_threshold'] = $this->apiClient->getSerializer()->toQueryValue($accuracy_threshold);
         }
 
         // for model (json/xml)

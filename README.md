@@ -20,11 +20,11 @@ To install the bindings via [Composer](http://getcomposer.org/), add the followi
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/freightlive/bumbal-geoservice-client-api-php.git"
+      "url": "https://github.com/bumbal/bumbal-geoservice-client-api-php.git"
     }
   ],
   "require": {
-    "freightlive/bumbal-geoservice-client-api-php": "*@dev"
+    "bumbal/bumbal-geoservice-client-api-php": "*@dev"
   }
 }
 ```
